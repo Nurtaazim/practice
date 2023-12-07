@@ -1,87 +1,156 @@
+import database.DataBase;
+import enums.Gender;
+import models.Group;
+import models.Lesson;
+import models.Student;
+import service.impl.GroupServiceImpl;
+import service.impl.LessonServiceImpl;
+import service.impl.StudentServiceImpl;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Contact contact1 = new Contact("Nurgazy", "0111111111");
-        Contact contact2 = new Contact("Nurmukhammed", "0111111111");
-        Contact contact3 = new Contact("Nur", "0111111111");
-        Contact contact4 = new Contact("Nurai", "0111111111");
-        Contact contact5 = new Contact("Mirlan", "0111111111");
-        Contact contact6 = new Contact("Nurtilek", "0111347689");
-        Contact contact7 = new Contact("Aliaskar", "0456456789");
-        Contact contact8 = new Contact("Jigit", "0999999999");
-        Contact contact9 = new Contact("Aiturgan", "0777777777");
-        Contact contact10 = new Contact("Gulumkan", "0666666666");
-        Contact contact11 = new Contact("Zaripbek", "0555555555");
-        Contact contact12 = new Contact("Nurlan", "0444444444");
-        Contact contact13 = new Contact("Agai", "0333333333");
-        Contact contact14 = new Contact("Ejeke", "0222222222");
-        ArrayList<Contact> contacts = new ArrayList<>(Arrays.asList(contact1, contact2, contact3, contact4, contact5, contact6,contact7,contact8, contact9,
-                contact10, contact11,contact12,contact13,contact14));
-        Phone phone = new Phone("samsung", "nurtash", contacts);
+        Scanner scannerForNum = new Scanner(System.in);
+        DataBase dataBase = new DataBase();
+        GroupServiceImpl groupService = new GroupServiceImpl();
+        LessonServiceImpl lessonService = new LessonServiceImpl();
+        StudentServiceImpl studentService = new StudentServiceImpl();
         MainLoop:
-        while (true) {
-            System.out.print("Ввыведите пароль: ");
-            String consolPassword = scanner.nextLine();
-            boolean chek = phone.turnOn(consolPassword);
-            if (chek){
-                while (true){
-                    System.out.println("""
-                            Выберите функцию
-                            1. Звонить
-                            2. Контакты
-                            0. Отключить 
-                        """);
-                    switch (scanner.nextLine()){
-                        case "1" ->{
-                            System.out.println("""
-                                    1.Звонить по номеру телефона
-                                    2.Звонить по имя контакта
-                                    """);
-                            switch (scanner.nextLine()){
-                                case "1" ->{
-                                    System.out.println("Ввыведите номер телефона : ");
-                                    String consol = scanner.nextLine();
-                                    System.out.println(phone.callWithPhoneNumber(consol));
-                                }
-                                case "2" ->{
-                                    System.out.println("Ввыведите имя контакта : ");
-                                    String consol = scanner.nextLine();
-                                    System.out.println(phone.callWithName(consol));
+        while (true){
+            System.out.println("""
+                    1 - Кируу
+                    0 - Чыгуу
+                    """);
+            String consol1 = scanner.nextLine();
+            switch (consol1){
+                case "1" ->{
+
+                    Loop:
+                    while (true){
+                        System.out.println("Пароль жазыныз : ");
+                        String consol2 = scanner.nextLine();
+                        if (consol2.equals("password2005")){
+                            InnerLoop:
+                            while (true){
+                                System.out.println("""
+                                        1 - Группа тузуу
+                                        2 - Бардык группаларды корсотуу
+                                        3 - Группаны издоо
+                                        4 - Группаны очуруу
+                                        5 - Группанын атын озгортуу
+                                        6 - Сабак кошуу
+                                        7 - Сабактардын баарын коруу
+                                        8 - Группанын сабактарын чыгаруу
+                                        9 - Сабакты очуруу
+                                        10 - Жаны студент кошуу
+                                        11 - Группадагы студенттерди алуу
+                                        0 - Чыгуу
+                                        """);
+                                String consol3 = scanner.nextLine();
+                                switch (consol3){
+                                    case "1" ->{
+                                        Group group = new Group();
+                                        System.out.println("Группанын атын жазыныз : ");
+                                        String consol4 = scanner.nextLine();
+                                        group.setName(consol4);
+                                        groupService.addGroup(group, dataBase.getGroups());
+                                    }
+                                    case "2" ->{
+                                        System.out.println(groupService.getAllGroups(dataBase.getGroups()));
+                                    }
+                                    case "3" ->{
+                                        System.out.println("Группанын атын жазыныз : ");
+                                        String consol5 = scanner.nextLine();
+                                        System.out.println(groupService.getGroupByName(consol5, dataBase.getGroups()));
+                                    }
+                                    case "4" ->{
+                                        System.out.println("Группанын атын жазыныз : ");
+                                        String consol6 = scanner.nextLine();
+                                        ArrayList<Group> groups = new ArrayList<>(groupService.deleteGroup(consol6, dataBase.getGroups()));
+                                        dataBase.getGroups().clear();
+                                        dataBase.getGroups().addAll(groups);
+                                    }
+                                    case "5" ->{
+                                        System.out.println("Озгортуу кылуучу групанын атын жазыныз : ");
+                                        String consol = scanner.nextLine();
+                                        System.out.println("Группага жаны ат жазыныз :");
+                                        String newName = scanner.nextLine();
+                                        groupService.updateGroup(consol, newName, dataBase.getGroups());
+                                    }
+                                    case "6" ->{
+                                        Lesson newLesson = new Lesson();
+                                        System.out.println("Кайсы группага кошосуз? Ошол группанын атын жазыныз:");
+                                        String consol = scanner.nextLine();
+                                        System.out.println("Сабактын атын жазыныз :");
+                                        newLesson.setName(scanner.nextLine());
+                                        lessonService.addLesson(newLesson, consol, dataBase.getGroups());
+                                    }
+                                    case "7" ->{
+                                        lessonService.getAllLessons(dataBase.getGroups());
+                                    }
+                                    case "8" ->{
+                                        System.out.println("Группанын атын жазыныз:");
+                                        System.out.println(lessonService.getLessonsByGroup(scanner.nextLine(), dataBase.getGroups()));
+                                    }
+                                    case "9" ->{
+                                        System.out.println("Кайсы группанын сабагын очуросуз? Ошол группанын атын жазыныз:");
+                                        String groupName = scanner.nextLine();
+                                        System.out.println("Сабактын атын жазыныз:");
+                                        String lessonName = scanner.nextLine();
+                                        lessonService.deleteLesson(groupName, lessonName, dataBase.getGroups());
+                                    }
+                                    case "10" ->{
+                                        Student student = new Student();
+                                        System.out.println("Атын жазыныз:");
+                                        student.setName(scanner.nextLine());
+                                        System.out.println("Фамилиясын жазыныз:");
+                                        student.setSurname(scanner.nextLine());
+                                        System.out.println("Жашын жазыныз:");
+                                        student.setAge(scannerForNum.nextInt());
+                                        System.out.println("Жынысын жазыныз:");
+                                        String gender = scanner.nextLine();
+                                        if (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("m")) {
+                                            student.setGender(Gender.MALE);
+                                        }else if (gender.equalsIgnoreCase("famale") || gender.equalsIgnoreCase("f")) {
+                                                student.setGender(Gender.MALE);
+                                        } else System.err.println("Туура эмес жыныс берип жатасыз!");
+                                        System.out.println("Эл.адресин жазыныз:");
+                                        student.setGmail(scanner.nextLine());
+                                        System.out.println("Паролюн жазыныз:");
+                                        student.setPassword(scanner.nextLine());
+                                        System.out.println("Кайсы группага кошосуз , группанын атын жазыныз:");
+                                        String console = scanner.nextLine();
+                                        studentService.addStudent(student,console,dataBase.getGroups());
+
+                                    }
+                                    case "11" ->{
+                                        System.out.println("Группанын атын жазыныз:");
+                                        String console = scanner.nextLine();
+                                        System.out.println(studentService.getStudentsByGroup(console, dataBase.getGroups()));
+                                    }
+                                    case "0" ->{
+                                        break MainLoop;
+                                    }
                                 }
                             }
                         }
-                        case "2" ->{
-                            System.out.println("1.Показать все контакты \n2.Найти контак по имени \n3.Найти контакт по номеру телефона \n4.Изменить контакт");
-                            switch (scanner.nextLine()){
-                                case "1" ->{
-                                    System.out.println(phone.getAllContact());
-                                }
-                                case "2" ->{
-                                    System.out.println("Ввыведите имя контакта : ");
-                                    System.out.println(phone.getContactByName(scanner.nextLine()));
-                                }
-                                case "3" ->{
-                                    System.out.println("Ввыведите номер телефона : ");
-                                    System.out.println(phone.getContactByPhoneNumber(scanner.nextLine()));
-                                }
-                                case "4" ->{
-                                    phone.updateContact();
-                                }
-                            }
+                        else if (consol2.equals("0")) {
+                            break Loop;
                         }
-                        case "0" ->{
-                            break MainLoop;
+                        else {
+                            System.err.println("Пароль туура эмес ! Кайра аракет кылып корунуз . Же болбосо токтотууну кааласаныз 0 ду басыныз !");
                         }
-                        default -> System.err.println("Error");
                     }
                 }
+                case "0" ->{
+                    break MainLoop;
+                }
             }
-            else System.err.println("Не правильный пароль ! ");
         }
+
 
     }
 }

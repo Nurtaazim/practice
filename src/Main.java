@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("test");
         Scanner scanner = new Scanner(System.in);
         Scanner scannerForNum = new Scanner(System.in);
         DataBase dataBase = new DataBase();
